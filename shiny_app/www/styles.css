@@ -1,0 +1,220 @@
+/* Custom CSS for LARS Shiny App */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap');
+
+body {
+  background-color: #0b0f19;
+  color: #e2e8f0;
+  font-family: 'Outfit', sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+.container-fluid {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Header */
+.app-header {
+  background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 25px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.app-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.app-title {
+  font-size: 2.8rem;
+  margin: 0;
+  background: linear-gradient(to right, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.05em;
+}
+
+.app-subtitle {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  margin-top: 8px;
+  font-weight: 300;
+}
+
+/* Panels & Cards */
+.control-card, .metric-card {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.control-card:hover, .metric-card:hover {
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 10px;
+  color: #f1f5f9;
+  letter-spacing: -0.02em;
+}
+
+/* Form Controls */
+.form-group label {
+  color: #94a3b8;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.form-control, select, .selectize-input {
+  background-color: #1f2937 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #374151 !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+}
+
+.form-control:focus, .selectize-input.focus {
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25) !important;
+}
+
+/* Slider Customization */
+.irs-line {
+  background-color: #374151 !important;
+  border: none !important;
+  height: 6px !important;
+}
+.irs-bar {
+  background-color: #8b5cf6 !important;
+  height: 6px !important;
+}
+.irs-slider {
+  background-color: #a78bfa !important;
+  border: 2px solid #ffffff !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50% !important;
+  top: 22px !important;
+}
+.irs-single {
+  background-color: #8b5cf6 !important;
+  font-family: 'Space Grotesk', sans-serif !important;
+}
+
+/* Actions Table and Text */
+.action-box {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+  border-left: 4px solid #8b5cf6;
+  padding: 16px;
+  border-radius: 0 12px 12px 0;
+  margin-bottom: 20px;
+}
+
+.action-box p {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.badge-add {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-drop {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-start {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* Custom Table Style */
+.table-custom {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-custom th {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: #94a3b8;
+  text-align: left;
+  padding: 12px;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.table-custom td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.table-custom tr:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Playback buttons */
+.btn-playback {
+  background: #312e81;
+  color: #ffffff;
+  border: 1px solid #4338ca;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  margin-right: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-playback:hover {
+  background: #4338ca;
+  border-color: #6366f1;
+  color: #ffffff;
+}
+
+.btn-playback:active {
+  transform: scale(0.95);
+}
