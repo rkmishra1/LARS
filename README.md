@@ -73,24 +73,24 @@ Predictors $X$ are standardized to have zero mean and unit $L_2$ norm, and respo
 \sum_{i=1}^n X_{ij} = 0, \quad \sum_{i=1}^n X_{ij}^2 = 1, \quad \sum_{i=1}^n y_i = 0
 ```
 
-#### 2. Equiangular Vector ($u_A$)
-For an active set $A$ and signs $s_A = \text{sign}(X_A^T r)$, let $X_A = [s_j X_j]_{j \in A}$ and $G_A = X_A^T X_A$. The equiangular direction vector $u_A$ is:
+#### 2. Equiangular Vector ($u_{\mathcal{A}}$)
+For an active set $\mathcal{A}$ and signs $s_{\mathcal{A}} = \text{sign}(X_{\mathcal{A}}^T r)$, let $X_{\mathcal{A}} = [s_j X_j]_{j \in \mathcal{A}}$ and $G_{\mathcal{A}} = X_{\mathcal{A}}^T X_{\mathcal{A}}$. The equiangular direction vector $u_{\mathcal{A}}$ is:
 ```math
-u_A = X_A w_A \quad \text{where} \quad w_A = A_A \, G_A^{-1} \mathbf{1}_A, \quad A_A = \bigl(\mathbf{1}_A^T G_A^{-1} \mathbf{1}_A\bigr)^{-1/2}
+u_{\mathcal{A}} = X_{\mathcal{A}} w_{\mathcal{A}} \quad \text{where} \quad w_{\mathcal{A}} = A_{\mathcal{A}} \, G_{\mathcal{A}}^{-1} \mathbf{1}_{\mathcal{A}}, \quad A_{\mathcal{A}} = \bigl(\mathbf{1}_{\mathcal{A}}^T G_{\mathcal{A}}^{-1} \mathbf{1}_{\mathcal{A}}\bigr)^{-1/2}
 ```
 
-This guarantees that the projection of the direction onto all active variables is identical: $X_A^T u_A = A_A \mathbf{1}_A$.
+This guarantees that the projection of the direction onto all active variables is identical: $X_{\mathcal{A}}^T u_{\mathcal{A}} = A_{\mathcal{A}} \mathbf{1}_{\mathcal{A}}$.
 
 #### 3. Step Length ($\hat{\gamma}$)
-The step size $\hat{\gamma}$ to add the next variable $j \in A^c$ is the smallest positive value where its correlation with the residual catches up to the active set correlation $\hat{C} = \max_j |c_j|$:
+The step size $\hat{\gamma}$ to add the next variable $j \in \mathcal{A}^c$ is the smallest positive value where its correlation with the residual catches up to the active set correlation $\hat{C} = \max_j |c_j|$:
 ```math
-\hat{\gamma} = \min_{j \in A^c}^{+} \left\{ \frac{\hat{C} - c_j}{A_A - a_j},\ \frac{\hat{C} + c_j}{A_A + a_j} \right\}, \quad \text{where} \quad a = X^T u_A
+\hat{\gamma} = \min_{j \in \mathcal{A}^c}^{+} \left\{ \frac{\hat{C} - c_j}{A_{\mathcal{A}} - a_j},\ \frac{\hat{C} + c_j}{A_{\mathcal{A}} + a_j} \right\}, \quad \text{where} \quad a = X^T u_{\mathcal{A}}
 ```
 
 #### 4. Lasso Coefficient Drop ($\tilde{\gamma}$)
-If `type = "lasso"`, we monitor the active coefficients $\beta_A$ moving along the path $\beta_A(\gamma) = \beta_A + \gamma \tilde{w}_A$ where $\tilde{w}_A = s_A \circ w_A$. The step length $\tilde{\gamma}$ where a coefficient hits 0 is:
+If `type = "lasso"`, we monitor the active coefficients $\beta_{\mathcal{A}}$ moving along the path $\beta_{\mathcal{A}}(\gamma) = \beta_{\mathcal{A}} + \gamma \tilde{w}_{\mathcal{A}}$ where $\tilde{w}_{\mathcal{A}} = s_{\mathcal{A}} \circ w_{\mathcal{A}}$. The step length $\tilde{\gamma}$ where a coefficient hits 0 is:
 ```math
-\tilde{\gamma} = \min_{j \in A}^{+} \left\{ -\frac{\beta_j}{\tilde{w}_j} \right\}
+\tilde{\gamma} = \min_{j \in \mathcal{A}}^{+} \left\{ -\frac{\beta_j}{\tilde{w}_j} \right\}
 ```
 If $\tilde{\gamma} < \hat{\gamma}$, we truncate the step at $\tilde{\gamma}$, remove that variable, and recompute the direction.
 
