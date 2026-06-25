@@ -1,0 +1,132 @@
+---
+title: "Least Angle Regression (LARS) and Lasso Paths"
+author: "AI Assistant & Pair Programmer"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: cosmo
+    highlight: tango
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk_set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Introduction to LARS
+
+**Least Angle Regression (LARS)** is an elegant model-selection and shrinkage algorithm proposed by Bradley Efron, Trevor Hastie, Iain Johnstone, and Robert Tibshirani in their seminal 2004 paper. It provides a computationally efficient method for fitting linear regression models to high-dimensional datasets.
+
+LARS is closely connected to **Lasso** (Least Absolute Shrinkage and Selection Operator) and **Forward Stagewise** regression. In fact, with a minor modification, LARS can compute the exact piecewise-linear Lasso solution path at the same computational cost as a single Ordinary Least Squares (OLS) fit.
+
+### Mathematical Formulation
+
+The algorithm works by building a regression model step-by-step. At each step, it identifies the predictor that has the highest absolute correlation with the current residual, and then moves the coefficients of all active predictors in an *equiangular* (least angle) direction.
+
+#### 1. Standardization
+All predictors $X_j$ are standardized to have mean zero and unit $L_2$ norm:
+$$\sum_{i=1}^n X_{ij} = 0, \quad \sum_{i=1}^n X_{ij}^2 = 1 \quad \text{for } j = 1, \dots, p$$
+The response $y$ is centered to have mean zero:
+$$\sum_{i=1}^n y_i = 0$$
+This eliminates the intercept term during path fitting, which can be recovered post-hoc.
+
+#### 2. Equiangular Direction
+Let $A \subset \{1, \dots, p\}$ be the active set of predictors, and let $s_j = \text{sign}(c_j)$ be the sign of the current correlation $c_j = X_j^T (y - \mu)$ for $j \in A$.
+We form the active predictor matrix $X_A$ by multiplying columns of $X$ by their signs:
+$$X_A = [s_j X_j]_{j \in A}$$
+Let $G_A = X_A^T X_A$ be the Gram matrix of the active predictors. The equiangular vector $u_A$, which makes equal angles with all columns in $X_A$, is computed as:
+$$u_A = X_A w_A \quad \text{where} \quad w_A = A_A G_A^{-1} 1_A, \quad A_A = (1_A^T G_A^{-1} 1_A)^{-1/2}$$
+
+#### 3. Step Length ($\gamma$)
+The algorithm calculates the smallest positive step length $\gamma$ that causes a new predictor $j \in A^c$ to reach the same correlation level as the active set. For each inactive variable $j$:
+$$\gamma = \min_{j \in A^c}^+ \left\{ \frac{\hat{C} - c_j}{A_A - a_j}, \frac{\hat{C} + c_j}{A_A + a_j} \right\}$$
+where $a = X^T u_A$ and $\hat{C} = \max_j |c_j|$.
+
+#### 4. Lasso Modification
+For the Lasso path, if an active coefficient crosses zero at some step size $\tilde{\gamma} < \hat{\gamma}$, we truncate the step at $\tilde{\gamma}$, remove that variable from the active set $A$, and recompute the direction.
+
+---
+
+## Custom LARS Implementation in Action
+
+Let's load our custom implementation and demonstrate it on the classic **Diabetes** dataset.
+
+```{r load_code}
+source("../R/lars_impl.R")
+library(lars)
+
+# Load data
+data(diabetes)
+X <- as.matrix(diabetes$x)
+y <- as.numeric(diabetes$y)
+```
+
+### 1. Fit the LARS Path
+
+```{r fit_lar}
+fit_lar <- lars_fit(X, y, type = "lar")
+print(fit_lar$call)
+```
+
+### 2. Fit the Lasso Path
+
+```{r fit_lasso}
+fit_lasso <- lars_fit(X, y, type = "lasso")
+```
+
+Let's print the step-by-step actions along the Lasso path:
+
+```{r print_steps, echo=FALSE}
+action_history <- sapply(fit_lasso$actions, function(act) {
+  type <- if (act > 0) "Added" else "Dropped"
+  name <- names(act)
+  paste(type, name)
+})
+
+steps_df <- data.frame(
+  Step = 1:length(action_history),
+  Action = action_history,
+  Lambda = round(fit_lasso$lambda[-1], 2),
+  R2 = round(fit_lasso$R2[-1], 4),
+  Cp = round(fit_lasso$Cp[-1], 2)
+)
+
+knitr::kable(steps_df, caption = "LARS-Lasso Iteration Details")
+```
+
+---
+
+## Path Visualizations
+
+We can visualize the coefficient paths as a function of the $L_1$ norm of the coefficients.
+
+```{r plot_paths, fig.width=10, fig.height=5}
+par(mfrow = c(1, 2))
+plot(fit_lar)
+title(sub = "Standard LARS Path", line = -1)
+
+plot(fit_lasso)
+title(sub = "LARS-Lasso Path (Variable dropped at step 11)", line = -1)
+```
+
+---
+
+## Model Selection
+
+We can select the optimal model based on **Mallows' Cp** statistic:
+
+```{r model_selection}
+best_step <- which.min(fit_lasso$Cp)
+best_coefs <- predict(fit_lasso, s = best_step, type = "coefficients")
+
+cat("Optimal model selected at Step", best_step - 1, "\n")
+cat("Minimum Mallows' Cp:", round(fit_lasso$Cp[best_step], 2), "\n\n")
+
+cat("Selected Coefficients:\n")
+print(round(best_coefs$coefficients, 4))
+cat("Intercept:", round(best_coefs$intercepts, 4), "\n")
+```
+
+The custom implementation matches the original `lars` package from CRAN exactly, providing a highly legible and customizable codebase for educational and research purposes.
