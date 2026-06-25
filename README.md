@@ -45,8 +45,8 @@ LARS builds a sparse linear regression model sequentially. Rather than fitting a
 
 ```mermaid
 graph TD
-    A[Start: Coefficients = 0, Residual r = y] --> B[Find predictor X_j most correlated with r]
-    B --> C[Add X_j to Active Set A]
+    A[Start: Coefficients = 0, Residual r = y] --> B[Find predictor x_j most correlated with r]
+    B --> C[Add x_j to Active Set A]
     C --> D[Compute Equiangular Direction u_A]
     D --> E[Compute step size gamma_add to next join point]
     E --> F{Lasso Mode?}
@@ -70,11 +70,11 @@ graph TD
 Predictors $X$ are standardized to have zero mean and unit $L_2$ norm, and response $y$ is centered:
 
 ```math
-\sum_{i=1}^n X_{ij} = 0, \quad \sum_{i=1}^n X_{ij}^2 = 1, \quad \sum_{i=1}^n y_i = 0
+\sum_{i=1}^n x_{ij} = 0, \quad \sum_{i=1}^n x_{ij}^2 = 1, \quad \sum_{i=1}^n y_i = 0
 ```
 
 #### 2. Equiangular Vector ($u_{\mathcal{A}}$)
-For an active set $\mathcal{A}$ and signs $s_{\mathcal{A}} = \text{sign}(X_{\mathcal{A}}^T r)$, let $X_{\mathcal{A}} = [s_j X_j]_{j \in \mathcal{A}}$ and $G_{\mathcal{A}} = X_{\mathcal{A}}^T X_{\mathcal{A}}$. The equiangular direction vector $u_{\mathcal{A}}$ is:
+For an active set $\mathcal{A}$ and signs $s_{\mathcal{A}} = \text{sign}(X_{\mathcal{A}}^T r)$, let $X_{\mathcal{A}} = [s_j \mathbf{x}_{j}]_{j \in \mathcal{A}}$ and $G_{\mathcal{A}} = X_{\mathcal{A}}^T X_{\mathcal{A}}$. The equiangular direction vector $u_{\mathcal{A}}$ is:
 ```math
 u_{\mathcal{A}} = X_{\mathcal{A}} w_{\mathcal{A}} \quad \text{where} \quad w_{\mathcal{A}} = A_{\mathcal{A}} \, G_{\mathcal{A}}^{-1} \mathbf{1}_{\mathcal{A}}, \quad A_{\mathcal{A}} = \bigl(\mathbf{1}_{\mathcal{A}}^T G_{\mathcal{A}}^{-1} \mathbf{1}_{\mathcal{A}}\bigr)^{-1/2}
 ```
