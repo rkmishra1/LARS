@@ -141,6 +141,17 @@ This launches a browser window showing the interactive visualization.
 
 ---
 
+## 📊 Simulation Study
+
+We recreated the simulation study described in **Section 7 of the LARS paper (Efron et al., 2004)**. It constructs a quadratic model with $m = 64$ predictors (including squares and pairwise interactions) from the 10 main effects of the diabetes dataset, fits a true mean vector from a 10-step LARS fit, and runs multiple replications with Gaussian noise to track the average proportion of variance ($R^2$) explained at each step.
+
+### Running the Simulation
+```bash
+Rscript examples/lars_simulation.R
+```
+
+---
+
 ## ✅ Verification Results
 
 Our custom implementation is thoroughly verified against CRAN's official `lars` package. You can run the test suite to confirm:
