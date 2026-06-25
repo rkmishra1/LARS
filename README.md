@@ -68,20 +68,30 @@ graph TD
 
 #### 1. Standardization
 Predictors $X$ are standardized to have zero mean and unit $L_2$ norm, and response $y$ is centered:
-$$\sum_{i=1}^n X_{ij} = 0, \quad \sum_{i=1}^n X_{ij}^2 = 1, \quad \sum_{i=1}^n y_i = 0$$
+
+```math
+\sum_{i=1}^n X_{ij} = 0, \quad \sum_{i=1}^n X_{ij}^2 = 1, \quad \sum_{i=1}^n y_i = 0
+```
 
 #### 2. Equiangular Vector ($u_A$)
 For an active set $A$ and signs $s_A = \text{sign}(X_A^T r)$, let $X_A = [s_j X_j]_{j \in A}$ and $G_A = X_A^T X_A$. The equiangular direction vector $u_A$ is:
-$$u_A = X_A w_A \quad \text{where} \quad w_A = A_A G_A^{-1} 1_A, \quad A_A = (1_A^T G_A^{-1} 1_A)^{-1/2}$$
-This guarantees that the projection of the direction onto all active variables is identical: $X_A^T u_A = A_A 1_A$.
+```math
+u_A = X_A w_A \quad \text{where} \quad w_A = A_A \, G_A^{-1} \mathbf{1}_A, \quad A_A = \bigl(\mathbf{1}_A^T G_A^{-1} \mathbf{1}_A\bigr)^{-1/2}
+```
+
+This guarantees that the projection of the direction onto all active variables is identical: $X_A^T u_A = A_A \mathbf{1}_A$.
 
 #### 3. Step Length ($\hat{\gamma}$)
 The step size $\hat{\gamma}$ to add the next variable $j \in A^c$ is the smallest positive value where its correlation with the residual catches up to the active set correlation $\hat{C} = \max_j |c_j|$:
-$$\hat{\gamma} = \min_{j \in A^c}^+ \left\{ \frac{\hat{C} - c_j}{A_A - a_j}, \frac{\hat{C} + c_j}{A_A + a_j} \right\} \quad \text{where} \quad a = X^T u_A$$
+```math
+\hat{\gamma} = \min_{j \in A^c}^{+} \left\{ \frac{\hat{C} - c_j}{A_A - a_j},\ \frac{\hat{C} + c_j}{A_A + a_j} \right\}, \quad \text{where} \quad a = X^T u_A
+```
 
 #### 4. Lasso Coefficient Drop ($\tilde{\gamma}$)
 If `type = "lasso"`, we monitor the active coefficients $\beta_A$ moving along the path $\beta_A(\gamma) = \beta_A + \gamma \tilde{w}_A$ where $\tilde{w}_A = s_A \circ w_A$. The step length $\tilde{\gamma}$ where a coefficient hits 0 is:
-$$\tilde{\gamma} = \min_{j \in A}^+ \left\{ -\frac{\beta_j}{\tilde{w}_j} \right\}$$
+```math
+\tilde{\gamma} = \min_{j \in A}^{+} \left\{ -\frac{\beta_j}{\tilde{w}_j} \right\}
+```
 If $\tilde{\gamma} < \hat{\gamma}$, we truncate the step at $\tilde{\gamma}$, remove that variable, and recompute the direction.
 
 ---
